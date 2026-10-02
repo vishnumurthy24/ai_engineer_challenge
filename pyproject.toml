@@ -10,3 +10,8 @@ dependencies = [
     "requests>=2.34.2",
     "uvicorn[standard]>=0.54.0",
 ]
+
+[tool.uv.workspace]
+members = [
+    "mini_1",
+]
