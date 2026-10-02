@@ -1,51 +1,29 @@
-
-#FAST API 
-
-#FIRST PROGRAM
-
-
-
 from fastapi import FastAPI
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
+class AIRequest(BaseModel):
+    prompt: str = Field(min_length=1)
+    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
+    max_tokens: int = Field(default=100, ge=1, le=4000)
+
+
 @app.get("/")
 def home():
-    return {"message": "Hello, AI Engineer!"}
-
-
-# another get request
-
-@app.get("/about")
-def about():
     return {
-        "project": "AI Assistant API",
-        "version": "1.0"
+        "message": "AI API is running"
     }
 
 
-#Path Parameters
+@app.post("/generate")
+def generate(request: AIRequest):
+    response = f"AI response for: {request.prompt}"
 
-user_id = 101
-
-@app.get("/users/{user_id}")
-def get_user(user_id: int):
     return {
-        "user_id": user_id
-    }
-
-#Query Parameters
-
-@app.get("/search")
-def search(name: str):
-    return {
-        "search_query": name
-    }
-
-@app.get("/products")
-def products(category: str, limit: int = 10):
-    return {
-        "category": category,
-        "limit": limit
+        "prompt": request.prompt,
+        "response": response,
+        "temperature": request.temperature,
+        "max_tokens": request.max_tokens
     }
