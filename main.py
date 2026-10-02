@@ -27,3 +27,47 @@ def generate(request: AIRequest):
         "temperature": request.temperature,
         "max_tokens": request.max_tokens
     }
+
+
+#Logging in FastAPI 🤖
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(__name__)
+
+app_1 = FastAPI()
+
+
+class AIRequest(BaseModel):
+    prompt: str
+
+
+@app.get("/")
+def home():
+    logger.info("Home endpoint called")
+
+    return {
+        "message": "AI API is running"
+    }
+
+
+@app.post("/generate")
+def generate(request: AIRequest):
+    logger.info("Generate request received")
+
+    logger.info("Prompt length: %d", len(request.prompt))
+
+    response = f"AI response for: {request.prompt}"
+
+    logger.info("Response generated successfully")
+
+    return {
+        "response": response
+    }
